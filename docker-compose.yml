@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - SERVICES=sqs,ses,sns,dynamodb
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./localstack/init_localstack.sh:/etc/localstack/init/ready.d/init_localstack.sh
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  admin:
+    build:
+      context: ./admin
+    container_name: admin
+    env_file: ./admin/.env
+    depends_on:
+      localstack:
+        condition: service_healthy
+    ports:
+      - "8001:8001"
+
+  requestor:
+    build:
+      context: ./requestor
+    container_name: requestor
+    env_file: ./requestor/.env
+    depends_on:
+      localstack:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  worker:
+    build:
+      context: ./worker
+    container_name: worker
+    env_file: ./worker/.env
+    depends_on:
+      localstack:
+        condition: service_healthy
+    restart: on-failure
