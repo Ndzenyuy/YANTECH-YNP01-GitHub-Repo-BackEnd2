@@ -11,6 +11,10 @@ class AppRequest(BaseModel):
     Email: EmailStr
     Domain: str
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 @app.post("/app")
 def register_application(app_req: AppRequest):
     try:
