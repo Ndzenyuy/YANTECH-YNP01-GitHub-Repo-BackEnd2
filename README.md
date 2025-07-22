@@ -4,7 +4,7 @@ A microservices-based Python project using FastAPI, Docker, and LocalStack to ha
 
 ## 📦 Prerequisites
 
-The commands are required to install docker, docker-compose and local stack
+These commands are required to install docker, docker-compose and local stack, so once the instance is running, execute these commands. You can copy them all and paste it to the cli and respond each time prompted for a yes
 
 ```bash
 sudo apt-get update
