@@ -56,7 +56,7 @@ cd YANTECH-YNP01-GitHub-Repo-BackEnd2
 
 ### 2. Set up `.env` files for each service
 
-Create `.env` files inside each of the `admin`, `requestor`, and `worker` folders. Here's an example:
+Verify the `.env` files are inside each of the `admin`, `requestor`, and `worker` folders. Here's an example:
 
 ```env
 AWS_ACCESS_KEY_ID=test
@@ -68,6 +68,8 @@ REQUEST_LOG_TABLE=RequestLogs
 ```
 
 ### 3. Build and Run Services
+
+Make sure you are at the root folder where docker-compose.yml file is and run the following command to spin the different containers
 
 ```bash
 docker-compose build --no-cache
