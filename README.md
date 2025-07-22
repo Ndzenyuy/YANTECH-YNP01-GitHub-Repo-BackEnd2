@@ -4,7 +4,7 @@ A microservices-based Python project using FastAPI, Docker, and LocalStack to ha
 
 ## 📦 Prerequisites
 
-# Add Docker's official GPG key:
+The commands are required to install docker, docker-compose and local stack
 
 ```bash
 sudo apt-get update
@@ -27,7 +27,7 @@ sudo apt-get install docker-compose-plugin -y
 
 sudo apt install docker-compose -y
 
-sudo usermod -aG docker $USER   
+sudo usermod -aG docker $USER
 
 # Make sure python3-full and venv are installed
 sudo apt install -y python3-full python3-venv
@@ -50,8 +50,8 @@ pip install localstack
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Ndzenyuy/YNP-app.git
-cd YNP-app
+git clone https://github.com/YANTECH-NP/YANTECH-YNP01-GitHub-Repo-BackEnd2.git
+cd YANTECH-YNP01-GitHub-Repo-BackEnd2
 ```
 
 ### 2. Set up `.env` files for each service
@@ -87,62 +87,66 @@ curl http://localhost:8001/health     # Admin
 
 # Test messages
 
+run this on the terminal of the instance running local stack
+
 ## admin register a new app
+
 curl -X POST http://localhost:8001/app \
-  -H "Content-Type: application/json" \
-  -d '{
-    "Application": "App1",
-    "App_name": "CHA - Student Platform",
-    "Email": "no-reply@cha.com",
-    "Domain": "cha.com"
-  }'
-  
+ -H "Content-Type: application/json" \
+ -d '{
+"Application": "App1",
+"App_name": "CHA - Student Platform",
+"Email": "no-reply@cha.com",
+"Domain": "cha.com"
+}'
 
-## requester send a new request of type email  
-curl -X POST http://localhost:8000/requester \
-  -H "Content-Type: application/json" \
-  -d '{
-    "Application": "App2",
-    "Recipient": "user@example.com",
-    "Subject": "Test Subject",
-    "Message": "Hello, this is a test message!",
-    "OutputType": "EMAIL",
-    "Interval": {
-      "Once": true
-    },
-    "EmailAddresses": ["user@example.com"]
-  }'
+## requester send a new request of type email
 
-## requester send a new request of type SMS   
-curl -X POST http://localhost:8000/requester \
-  -H "Content-Type: application/json" \
-  -d '{
-    "Application": "App1",
-    "Recipient": "1234567890",
-    "Subject": "Test SMS",
-    "Message": "This is an SMS test.",
-    "OutputType": "SMS",
-    "PhoneNumber": "+15555555555",
-    "Interval": {
-      "Days": [1, 15]
-    }
-  }'
+curl -X POST http://localhost:8000/request \
+ -H "Content-Type: application/json" \
+ -d '{
+"Application": "App2",
+"Recipient": "user@example.com",
+"Subject": "Test Subject",
+"Message": "Hello, this is a test message!",
+"OutputType": "EMAIL",
+"Interval": {
+"Once": true
+},
+"EmailAddresses": ["user@example.com"]
+}'
 
-## requester send a new request of type PUSH   
-curl -X POST http://localhost:8000/requester \
-  -H "Content-Type: application/json" \
-  -d '{
-    "Application": "App1",
-    "Recipient": "pushUser1",
-    "Subject": "New Alert",
-    "Message": "You have a new notification!",
-    "OutputType": "PUSH",
-    "PushToken": "example_token_123",
-    "Interval": {
-      "Weeks": [2, 4]
-    }
-  }'
+## requester send a new request of type SMS
 
+curl -X POST http://localhost:8000/request \
+ -H "Content-Type: application/json" \
+ -d '{
+"Application": "App1",
+"Recipient": "1234567890",
+"Subject": "Test SMS",
+"Message": "This is an SMS test.",
+"OutputType": "SMS",
+"PhoneNumber": "+15555555555",
+"Interval": {
+"Days": [1, 15]
+}
+}'
+
+## requester send a new request of type PUSH
+
+curl -X POST http://localhost:8000/request \
+ -H "Content-Type: application/json" \
+ -d '{
+"Application": "App1",
+"Recipient": "pushUser1",
+"Subject": "New Alert",
+"Message": "You have a new notification!",
+"OutputType": "PUSH",
+"PushToken": "example_token_123",
+"Interval": {
+"Weeks": [2, 4]
+}
+}'
 
 ## 🔍 Debugging & Logs
 
@@ -155,6 +159,15 @@ docker logs requestor
 ```
 
 ### Interact with LocalStack Services
+
+You will have to run execute these command inside any of the containers, to do so run
+
+```bash
+docker exec -it admin bash
+
+```
+
+Install aws in the container in order to run the following commands
 
 ```bash
 # List queues
@@ -171,7 +184,7 @@ aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name RequestLogs
 
 ## 🔁 Developer Workflow (Auto Refresh on Code Change)
 
-**Clean All**
+**Clean All (stop and delete all the containers: required every time for a new build)**
 
 ```bash
 docker-compose down --volumes --remove-orphans
@@ -200,15 +213,4 @@ docker volume prune -f
 ├── docker-compose.yml
 ├── README.md
 └── requirements.txt
-```
-
-## ✅ Requirements
-
-```txt
-fastapi
-boto3
-python-dotenv
-uvicorn
-pydantic==1.10.13
-email-validator
 ```

@@ -11,7 +11,7 @@ app = FastAPI()
 def health_check():
     return {"status": "ok"}
 
-@app.post("/requester")
+@app.post("/request")
 def notify(req: NotificationRequest):
     try:
         response = send_message_to_queue(req.dict())
