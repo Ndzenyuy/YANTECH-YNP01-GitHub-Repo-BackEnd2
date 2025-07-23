@@ -93,6 +93,7 @@ run this on the terminal of the instance running local stack
 
 ## admin register a new app
 
+```bash
 curl -X POST http://localhost:8001/app \
  -H "Content-Type: application/json" \
  -d '{
@@ -101,9 +102,11 @@ curl -X POST http://localhost:8001/app \
 "Email": "no-reply@cha.com",
 "Domain": "cha.com"
 }'
+```
 
 ## requester send a new request of type email
 
+```bash
 curl -X POST http://localhost:8000/request \
  -H "Content-Type: application/json" \
  -d '{
@@ -117,9 +120,11 @@ curl -X POST http://localhost:8000/request \
 },
 "EmailAddresses": ["user@example.com"]
 }'
+```
 
 ## requester send a new request of type SMS
 
+```bash
 curl -X POST http://localhost:8000/request \
  -H "Content-Type: application/json" \
  -d '{
@@ -133,9 +138,11 @@ curl -X POST http://localhost:8000/request \
 "Days": [1, 15]
 }
 }'
+```
 
 ## requester send a new request of type PUSH
 
+```bash
 curl -X POST http://localhost:8000/request \
  -H "Content-Type: application/json" \
  -d '{
@@ -149,6 +156,7 @@ curl -X POST http://localhost:8000/request \
 "Weeks": [2, 4]
 }
 }'
+```
 
 ## 🔍 Debugging & Logs
 
