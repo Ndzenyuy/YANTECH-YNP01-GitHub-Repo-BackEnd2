@@ -78,6 +78,14 @@ docker-compose up -d
 
 ## 🧪 Test the Services
 
+### Verify an email so that ses can send email to
+
+```bash
+docker exec -it localstack bash
+awslocal ses verify-email-identity --email-address user@example.com
+exit
+```
+
 ### ✅ Check if Services Are Running
 
 ```bash
