@@ -173,15 +173,15 @@ Install aws in the container in order to run the following commands
 
 ```bash
 # List queues
-aws --endpoint-url=http://localhost:4566 sqs list-queues
+aws --endpoint-url=http://localstack:4566 sqs list-queues
 
 # Receive messages
-aws --endpoint-url=http://localhost:4566 sqs receive-message \
+aws --endpoint-url=http://localstack:4566 sqs receive-message \
   --queue-url http://localstack:4566/000000000000/notifications-queue
 
 # Check DynamoDB tables
-aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name Applications
-aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name RequestLogs
+aws --endpoint-url=http://localstack:4566 dynamodb scan --table-name Applications
+aws --endpoint-url=http://localstack:4566 dynamodb scan --table-name RequestLogs
 ```
 
 ## 🔁 Developer Workflow (Auto Refresh on Code Change)
