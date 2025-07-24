@@ -2,9 +2,11 @@
 
 A microservices-based Python project using FastAPI, Docker, and LocalStack to handle notification requests (EMAIL, SMS, PUSH) through AWS services simulated locally.
 
+\*\*\* Test it on a t2.medium instance type
+
 ## 📦 Prerequisites
 
-These commands are required to install docker, docker-compose and local stack, so once the instance is running, execute these commands. You can copy them all and paste it to the cli and respond each time prompted for a yes
+These commands are required to install docker, docker-compose and local stack, so once the instance is running, execute these commands. You can copy them all and paste it to the cli and respond each time prompted for a yes.
 
 ```bash
 sudo apt-get update
