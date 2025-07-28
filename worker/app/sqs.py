@@ -2,13 +2,11 @@ import json
 import boto3
 from . import config
 
-session = boto3.session.Session(
-    aws_access_key_id=config.AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY,
+session = boto3.session.Session(    
     region_name=config.AWS_REGION
 )
 
-sqs = session.client("sqs", endpoint_url=config.ENDPOINT_URL)
+sqs = session.client("sqs")
 
 def poll_messages(max_messages=5, wait_time=10):
     response = sqs.receive_message(

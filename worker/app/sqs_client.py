@@ -4,10 +4,7 @@ from . import config , logger
 
 sqs = boto3.client(
     "sqs",
-    region_name=config.AWS_REGION,
-    aws_access_key_id=config.AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY,
-    endpoint_url="http://localstack:4566",
+    region_name=config.AWS_REGION
 )
 
 def poll_messages(max_messages=1):

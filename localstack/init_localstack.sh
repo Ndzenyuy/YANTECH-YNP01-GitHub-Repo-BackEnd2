@@ -6,6 +6,11 @@ echo "⏳ Bootstrapping AWS services in LocalStack..."
 # Create SQS queue
 awslocal --endpoint-url=http://localstack:4566 sqs create-queue --queue-name notifications-queue
 
+# Verify SES identity
+awslocal ses verify-email-identity --email-address user@example.com
+awslocal ses verify-email-identity --email-address no-reply@cha.com
+
+
 # Create DynamoDB Applications table
 awslocal dynamodb create-table \
   --table-name Applications \
