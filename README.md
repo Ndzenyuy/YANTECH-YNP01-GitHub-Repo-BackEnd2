@@ -1,236 +1,85 @@
-# 📬 Notification System with LocalStack
+# 🚀 Notifications Platform (Admin, Requestor, Worker)
 
-A microservices-based Python project using FastAPI, Docker, and LocalStack to handle notification requests (EMAIL, SMS, PUSH) through AWS services simulated locally.
+This project includes three microservices:
 
-\*\*\* Test it on a t2.medium instance type
+- **Admin**: Manages SQS/SNS/SES/DynamoDB resources.
+- **Requestor**: Sends notification requests to SQS.
+- **Worker**: Polls SQS and delivers messages using SES (email), SNS (SMS, push), and logs status in DynamoDB.
 
-## 📦 Prerequisites
+All services are containerized and designed to run in **AWS ECS (Fargate)** with IAM via **OIDC authentication** — no access keys required.
 
-These commands are required to install docker, docker-compose and local stack, so once the instance is running, execute these commands. You can copy them all and paste it to the cli and respond each time prompted for a yes.
+---
 
-```bash
-sudo apt-get update
-sudo apt-get install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-# Add the repository to Apt sources:
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-sudo apt-get update
-sudo apt-get install docker-compose-plugin -y
-
-sudo apt install docker-compose -y
-
-sudo usermod -aG docker $USER
-
-# Make sure python3-full and venv are installed
-sudo apt install -y python3-full python3-venv
-
-# Create a virtual environment
-python3 -m venv ~/.venvs/localstack
-
-# Activate the environment
-source ~/.venvs/localstack/bin/activate
-
-# Upgrade pip inside the venv
-pip install --upgrade pip
-
-# Now safely install localstack inside the venv
-pip install localstack
-```
-
-## 🚀 Setup Instructions
-
-### 1. Clone the Repository
+## 🛠 Project Structure
 
 ```bash
-git clone https://github.com/YANTECH-NP/YANTECH-YNP01-GitHub-Repo-BackEnd2.git
-cd YANTECH-YNP01-GitHub-Repo-BackEnd2
-```
-
-### 2. Set up `.env` files for each service
-
-Verify the `.env` files are inside each of the `admin`, `requestor`, and `worker` folders. Here's an example:
-
-```env
-AWS_ACCESS_KEY_ID=test
-AWS_SECRET_ACCESS_KEY=test
-AWS_REGION=us-east-1
-SQS_QUEUE_URL=http://localstack:4566/000000000000/notifications-queue
-DYNAMODB_TABLE=Applications
-REQUEST_LOG_TABLE=RequestLogs
-```
-
-### 3. Build and Run Services
-
-Make sure you are at the root folder where docker-compose.yml file is and run the following command to spin the different containers
-
-```bash
-docker-compose build --no-cache
-docker-compose up -d
-```
-
-## 🧪 Test the Services
-
-### Verify an email so that ses can send email to
-
-```bash
-docker exec -it localstack bash
-awslocal ses verify-email-identity --email-address user@example.com
-exit
-```
-
-### ✅ Check if Services Are Running
-
-```bash
-curl http://localhost:4566/_localstack/health
-curl http://localhost:8000/health     # Requestor
-curl http://localhost:8001/health     # Admin
-
-```
-
-# Test messages
-
-run this on the terminal of the instance running local stack
-
-## admin register a new app
-
-```bash
-curl -X POST http://localhost:8001/app \
- -H "Content-Type: application/json" \
- -d '{
-"Application": "App1",
-"App_name": "CHA - Student Platform",
-"Email": "no-reply@cha.com",
-"Domain": "cha.com"
-}'
-```
-
-## requester send a new request of type email
-
-```bash
-curl -X POST http://localhost:8000/request \
- -H "Content-Type: application/json" \
- -d '{
-"Application": "App2",
-"Recipient": "user@example.com",
-"Subject": "Test Subject",
-"Message": "Hello, this is a test message!",
-"OutputType": "EMAIL",
-"Interval": {
-"Once": true
-},
-"EmailAddresses": ["user@example.com"]
-}'
-```
-
-## requester send a new request of type SMS
-
-```bash
-curl -X POST http://localhost:8000/request \
- -H "Content-Type: application/json" \
- -d '{
-"Application": "App1",
-"Recipient": "1234567890",
-"Subject": "Test SMS",
-"Message": "This is an SMS test.",
-"OutputType": "SMS",
-"PhoneNumber": "+15555555555",
-"Interval": {
-"Days": [1, 15]
-}
-}'
-```
-
-## requester send a new request of type PUSH
-
-```bash
-curl -X POST http://localhost:8000/request \
- -H "Content-Type: application/json" \
- -d '{
-"Application": "App1",
-"Recipient": "pushUser1",
-"Subject": "New Alert",
-"Message": "You have a new notification!",
-"OutputType": "PUSH",
-"PushToken": "example_token_123",
-"Interval": {
-"Weeks": [2, 4]
-}
-}'
-```
-
-## 🔍 Debugging & Logs
-
-### Access Container Logs
-
-```bash
-docker logs worker
-docker logs admin
-docker logs requestor
-```
-
-### Interact with LocalStack Services
-
-You will have to run execute these command inside any of the containers, to do so run
-
-```bash
-docker exec -it admin bash
-
-```
-
-Install aws in the container in order to run the following commands
-
-```bash
-# List queues
-aws --endpoint-url=http://localstack:4566 sqs list-queues
-
-# Receive messages
-aws --endpoint-url=http://localstack:4566 sqs receive-message \
-  --queue-url http://localstack:4566/000000000000/notifications-queue
-
-# Check DynamoDB tables
-aws --endpoint-url=http://localstack:4566 dynamodb scan --table-name Applications
-aws --endpoint-url=http://localstack:4566 dynamodb scan --table-name RequestLogs
-```
-
-## 🔁 Developer Workflow (Auto Refresh on Code Change)
-
-**Clean All (stop and delete all the containers: required every time for a new build)**
-
-```bash
-docker-compose down --volumes --remove-orphans
-docker system prune -af
-docker volume prune -f
-
-```
-
-## 📁 Directory Structure
-
-```
-├── admin/
-│   ├── app/
-│   ├── .env
-│   ├── Dockerfile
-├── requestor/
-│   ├── app/
-│   ├── .env
-│   ├── Dockerfile
-├── worker/
-│   ├── app/
-│   ├── .env
-│   ├── Dockerfile
-├── localstack/
-│   ├── bootstrap.sh
+.
 ├── docker-compose.yml
-├── README.md
-└── requirements.txt
+├── admin/
+│   ├── Dockerfile
+│   └── .env
+├── requestor/
+│   ├── Dockerfile
+│   └── .env
+├── worker/
+│   ├── Dockerfile
+│   └── .env
+
+```
+
+## ☁️ Deployment to AWS ECS (Fargate)
+
+### 1. 🔧 Prerequisites
+
+- AWS CLI installed & configured
+
+- Docker installed
+
+- IAM role with OIDC for ECR + ECS deploy
+
+- ECR repositories created: admin, requestor, worker
+
+- ECS cluster created
+
+### 2. 🚀 Create ECS Services
+
+Use either the AWS Console or IaC (e.g., Terraform) to create 3 ECS services using:
+
+- Fargate launch type
+
+- Same ECS cluster
+
+- ECR image URLs above
+
+- Expose ports 8000 (requestor) and 8001 (admin)
+
+- Assign IAM roles with permissions to use:
+
+  -> SQS
+
+  -> SES
+
+  -> SNS
+
+  -> DynamoDB
+
+## 🔒 Environment Variables
+
+Each service uses a .env file:
+
+```bash
+# admin/.env
+AWS_REGION=us-east-1
+TABLE_NAME=Applications
+SNS_TOPIC_ARN=...
+SES_IDENTITY=...
+
+# requestor/.env
+AWS_REGION=us-east-1
+QUEUE_URL=...
+
+# worker/.env
+AWS_REGION=us-east-1
+QUEUE_URL=...
+TABLE_NAME=Applications
 ```
