@@ -3,7 +3,7 @@ name: Build and Push Requester Docker Image to ECR
 on:
     push:
         paths:
-            - 'request/**'
+            - 'requestor/**'
 
 env:
     ECR_REPOSITORY_ADMIN : ${{ secrets.ECR_REPOSITORY_ADMIN }} # Ensure this secret is set in your repository settings
