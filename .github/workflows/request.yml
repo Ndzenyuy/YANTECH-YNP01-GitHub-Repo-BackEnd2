@@ -3,7 +3,7 @@ name: Build and Push Requester Docker Image to ECR
 on:
   push:
     paths:
-      - 'request/**'  # Correct folder path
+      - 'requestor/**'  # Correct folder path
 
 env:
   ECR_REPOSITORY_REQUESTER: ${{ secrets.ECR_REPOSITORY_REQUESTER }}
