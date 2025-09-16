@@ -1,9 +1,9 @@
-name: Build and Push worker Docker Image to ECR
+name: Build and Push Admin Docker Image to ECR
 
 on:
     push:
         paths:
-            - 'worker/**'
+            - 'admin/**'
 
 env:
     ECR_REPOSITORY_ADMIN : ${{ secrets.ECR_REPOSITORY_ADMIN }} # Ensure this secret is set in your repository settings
@@ -36,7 +36,7 @@ jobs:
 
             - name: Build Docker image
                 run: |
-                    docker build -t ${{ secrets.ECR_REPOSITORY }}:latest ./worker
+                    docker build -t ${{ secrets.ECR_REPOSITORY }}:latest ./admin
 
             - name: Tag Docker image
                 run: |
