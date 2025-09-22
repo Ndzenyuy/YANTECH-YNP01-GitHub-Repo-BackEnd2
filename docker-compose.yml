@@ -32,8 +32,6 @@ services:
     env_file: ./worker/.env
     environment:
       - AWS_REGION=us-east-1
-      - AWS_ACCESS_KEY_ID=test
-      - AWS_SECRET_ACCESS_KEY=test
       - APPLICATIONS_TABLE=Applications
       - REQUEST_LOG_TABLE=RequestLogs  
     restart: on-failure
