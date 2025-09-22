@@ -8,6 +8,8 @@ services:
     env_file: ./admin/.env
     environment:
       - AWS_REGION=us-east-1
+      - AWS_ACCOUNT_ID=975391191374 
+      - APP_CONFIG_TABLE=Applications
     ports:
       - "8001:8001"
 
@@ -18,6 +20,8 @@ services:
     env_file: ./requestor/.env
     environment:
       - AWS_REGION=us-east-1
+      - SQS_QUEUE_URL=https://sqs.us-east-1.amazonaws.com/975391191374/YANTECH-YNP01-AWS-sqs-notification-requests-dev
+      - AWS_ACCOUNT_ID=975391191374 
     ports:
       - "8000:8000"
 
@@ -28,4 +32,8 @@ services:
     env_file: ./worker/.env
     environment:
       - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - APPLICATIONS_TABLE=Applications
+      - REQUEST_LOG_TABLE=RequestLogs  
     restart: on-failure
