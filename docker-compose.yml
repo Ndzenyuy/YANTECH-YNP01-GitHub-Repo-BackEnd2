@@ -9,7 +9,7 @@ services:
     environment:
       - AWS_REGION=us-east-1
       - AWS_ACCOUNT_ID=975391191374 
-      - APP_CONFIG_TABLE=Applications
+      - APP_CONFIG_TABLE=YANTECH-YNP01-AWS-appTable-dev
     ports:
       - "8001:8001"
 
@@ -32,6 +32,6 @@ services:
     env_file: ./worker/.env
     environment:
       - AWS_REGION=us-east-1
-      - APPLICATIONS_TABLE=Applications
-      - REQUEST_LOG_TABLE=RequestLogs  
+      - APPLICATIONS_TABLE=YANTECH-YNP01-AWS-appTable-dev
+      - REQUEST_LOG_TABLE=YANTECH-YNP01-AWS-logsTable-dev  
     restart: on-failure
