@@ -14,13 +14,13 @@ def setup_app_services(app):
 
     domain = app.Domain
 
-    # Verify domain for SES
-    verify_response = ses.verify_domain_identity(Domain=domain)
-    verification_token = verify_response["VerificationToken"]
+    # # Verify domain for SES
+    # verify_response = ses.verify_domain_identity(Domain=domain)
+    # verification_token = verify_response["VerificationToken"]
 
-    # Enable DKIM
-    dkim_response = ses.verify_domain_dkim(Domain=domain)
-    dkim_tokens = dkim_response["DkimTokens"]
+    # # Enable DKIM
+    # dkim_response = ses.verify_domain_dkim(Domain=domain)
+    # dkim_tokens = dkim_response["DkimTokens"]
 
     # Create SNS topic
     sns_response = sns.create_topic(Name=app.Application)
